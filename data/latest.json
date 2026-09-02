@@ -145,6 +145,54 @@
         {"title": "Bonola-cargador inalámbrico para teléfono de coche, alfombrilla antideslizante", "price_display": "$8.190", "rating": 4.9, "sold_count": 2000, "permalink": null},
         {"title": "Cargador inalámbrico rápido plegable 3 en 1, carga magnética para iPhone/Apple Watch/Airpods", "price_display": "$13.600", "rating": 4.4, "sold_count": 1000, "permalink": null}
       ]
+    },
+    {
+      "query": "hydrogel sleeping mask",
+      "niche": "K-beauty (exploratorio, requiere ISP)",
+      "failed": false,
+      "total_sold_top10": 3321,
+      "items": [
+        {"title": "Gel refrescante hielo cara máscara de ojos, compresa fría/caliente", "price_display": "$3.166", "rating": 4.9, "sold_count": 1000, "permalink": null},
+        {"title": "1/5/10 Uds mascarilla facial de biocolágeno, proteína de colágeno hidrogel", "price_display": "$955", "rating": 4.9, "sold_count": 500, "permalink": null},
+        {"title": "Mascarilla Facial de Bio-Colágeno (5 Piezas)", "price_display": "$5.100", "rating": 4.8, "sold_count": 500, "permalink": null},
+        {"title": "Mascarilla de Gel para ojos, compresa de hielo", "price_display": "$2.910", "rating": 4.5, "sold_count": 470, "permalink": null},
+        {"title": "Máscara de hidrogel anticaída antiarrugas de colágeno", "price_display": "$6.290", "rating": 4.3, "sold_count": 380, "permalink": null},
+        {"title": "Mascarilla facial de biocolágeno, mascarilla hidratante de hidrogel para la noche", "price_display": "$955", "rating": 4.7, "sold_count": 209, "permalink": null},
+        {"title": "Antifaz con peso para dormir con cubierta para los oídos, 3D, opaco", "price_display": "$28.800", "rating": 4.6, "sold_count": 128, "permalink": null},
+        {"title": "Gel refrescante hielo cara máscara de ojos (variante)", "price_display": "$2.789", "rating": 4.3, "sold_count": 109, "permalink": null}
+      ]
+    },
+    {
+      "query": "heartleaf toner",
+      "niche": "K-beauty (exploratorio, requiere ISP)",
+      "failed": false,
+      "total_sold_top10": 97,
+      "items": [
+        {"title": "Aceite limpiador para el control de poros de Heartleaf", "price_display": "$3.525 CLP", "rating": 4.3, "sold_count": 36, "permalink": null},
+        {"title": "celimax Ji Woo Gae Heartleaf BHA Peeling Pad", "price_display": "$4.014 CLP", "rating": null, "sold_count": 25, "permalink": null},
+        {"title": "Tónico brillante para el cuidado de la piel", "price_display": "$13.900 CLP", "rating": 5, "sold_count": 12, "permalink": null},
+        {"title": "V/C Tóner Cara coreana Vitamina C", "price_display": "$6.000 CLP", "rating": 3.7, "sold_count": 16, "permalink": null},
+        {"title": "ANUA Heartleaf Pore Control Cleansing Oil 200ml", "price_display": "$21.400 CLP", "rating": null, "sold_count": 2, "permalink": null},
+        {"title": "Celimax Heartleaf BHA Peeling Pad", "price_display": "$4.693 CLP", "rating": null, "sold_count": 2, "permalink": null},
+        {"title": "Celimax The Real Noni Energy Ampoule Essence", "price_display": "$4.693 CLP", "rating": null, "sold_count": 2, "permalink": null},
+        {"title": "Set de 4 Piezas para el Cuidado de la Piel Heartleaf 77%", "price_display": "$17.100 CLP", "rating": null, "sold_count": 1, "permalink": null}
+      ]
+    },
+    {
+      "query": "glass skin serum",
+      "niche": "K-beauty (exploratorio, requiere ISP)",
+      "failed": false,
+      "total_sold_top10": 9936,
+      "items": [
+        {"title": "Esencia Facial de Vitamina C", "price_display": "Gratis con compra", "rating": 4.6, "sold_count": 5000, "permalink": null},
+        {"title": "Suero de Células Madre PDRN en Ampolla", "price_display": "$10.903 CLP", "rating": 4.8, "sold_count": 1000, "permalink": null},
+        {"title": "Esencia Coreana con Péptidos de Seda", "price_display": "$3.193 CLP", "rating": 4.9, "sold_count": 1000, "permalink": null},
+        {"title": "Ampolla Intensiva de Péptidos para Lifting", "price_display": "$1.875 CLP", "rating": 4.7, "sold_count": 1000, "permalink": null},
+        {"title": "Kit SADOER Ampolla Vitamina C 24K Oro (7 piezas)", "price_display": "Gratis con compra", "rating": 4.8, "sold_count": 900, "permalink": null},
+        {"title": "The Ordinary Niacinamida 10% + Zinc 1%", "price_display": "$2.593 CLP", "rating": 4.8, "sold_count": 800, "permalink": null},
+        {"title": "Esencia de Té de Centella Asiática 55ml", "price_display": "$1.652 CLP", "rating": 4.7, "sold_count": 108, "permalink": null},
+        {"title": "Suero Original de Colágeno PDRN", "price_display": "$3.048 CLP", "rating": 4.4, "sold_count": 90, "permalink": null}
+      ]
     }
   ]
 }

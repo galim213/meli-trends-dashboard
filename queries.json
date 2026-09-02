@@ -7,5 +7,8 @@
   {"query": "closet organizer wardrobe", "niche": "Hogar y organización"},
   {"query": "magnetic car phone holder", "niche": "Accesorios tecnología"},
   {"query": "phone case shockproof", "niche": "Accesorios tecnología"},
-  {"query": "wireless charger fast", "niche": "Accesorios tecnología"}
+  {"query": "wireless charger fast", "niche": "Accesorios tecnología"},
+  {"query": "hydrogel sleeping mask", "niche": "K-beauty (exploratorio, requiere ISP)"},
+  {"query": "heartleaf toner", "niche": "K-beauty (exploratorio, requiere ISP)"},
+  {"query": "glass skin serum", "niche": "K-beauty (exploratorio, requiere ISP)"}
 ]
