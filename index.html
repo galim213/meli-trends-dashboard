@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Km 0 Import — Tendencias Meli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#F4F6F4; --paper-raised:#FFFFFF; --ink:#1B241F; --ink-dim:#56635C;
+    --accent:#0F6E5C; --accent-ink:#08352C; --accent-soft:#DCEBE6;
+    --amber:#B4661E; --amber-soft:#F5E3CE; --amber-ink:#5A3410;
+    --line:#DBE1DD; --line-strong:#C3CBC6;
+    --shadow:0 1px 2px rgba(15,40,30,.06), 0 6px 20px rgba(15,40,30,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#111815; --paper-raised:#161F1A; --ink:#E7EDE9; --ink-dim:#98A69E;
+      --accent:#3DBB9C; --accent-ink:#CFF3E7; --accent-soft:#1B332B;
+      --amber:#E29A4C; --amber-soft:#3A2A16; --amber-ink:#F4D9AE;
+      --line:#293832; --line-strong:#3A4A42;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 6px 24px rgba(0,0,0,.35);
+    }
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:'IBM Plex Sans',system-ui,sans-serif; line-height:1.5;}
+  h1,h2,h3{font-family:'IBM Plex Serif',Georgia,serif; font-weight:600; margin:0;}
+  .mono{font-family:'IBM Plex Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums;}
+  .wrap{max-width:980px; margin:0 auto; padding:40px 20px 80px;}
+  header{border-bottom:1px solid var(--line); padding-bottom:24px; margin-bottom:32px;}
+  .stamp{font-family:'IBM Plex Mono'; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-ink); background:var(--accent-soft); border:1px solid var(--accent); padding:4px 10px; border-radius:3px; display:inline-block;}
+  header h1{font-size:32px; margin:16px 0 6px;}
+  header p{color:var(--ink-dim); margin:0; font-size:15px;}
+  #updated{font-family:'IBM Plex Mono'; font-size:12.5px; color:var(--ink-dim); margin-top:10px;}
+  .niche-section{margin-bottom:44px;}
+  .niche-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:14px; flex-wrap:wrap;}
+  .niche-head h2{font-size:20px;}
+  .niche-head .trend-total{font-family:'IBM Plex Mono'; font-size:13px; color:var(--ink-dim);}
+  .chart-card{background:var(--paper-raised); border:1px solid var(--line); border-radius:10px; box-shadow:var(--shadow); padding:16px 18px; margin-bottom:16px;}
+  .chart-card svg{width:100%; height:auto; display:block;}
+  .query-block{background:var(--paper-raised); border:1px solid var(--line); border-radius:10px; box-shadow:var(--shadow); padding:16px 18px; margin-bottom:12px;}
+  .query-block h3{font-size:14.5px; font-family:'IBM Plex Sans'; font-weight:600; margin-bottom:2px;}
+  .query-meta{font-size:12px; color:var(--ink-dim); margin-bottom:10px; display:flex; gap:16px; flex-wrap:wrap;}
+  table{border-collapse:collapse; width:100%; font-size:13px;}
+  th,td{text-align:left; padding:6px 8px; border-bottom:1px solid var(--line);}
+  th{font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-dim); font-weight:500;}
+  td.num, th.num{text-align:right; font-family:'IBM Plex Mono';}
+  td.bar-cell{width:120px;}
+  .bar-track{background:var(--line); border-radius:3px; height:8px; overflow:hidden;}
+  .bar-fill{background:var(--accent); height:100%;}
+  a.title-link{color:var(--ink); text-decoration:none;}
+  a.title-link:hover{color:var(--accent-ink); text-decoration:underline;}
+  .empty{padding:40px 20px; text-align:center; color:var(--ink-dim); font-size:14px;}
+  footer{border-top:1px solid var(--line); padding-top:18px; margin-top:40px; font-size:12px; color:var(--ink-dim);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="stamp">Km 0 Import &middot; Radar diario</span>
+    <h1>Tendencias en MercadoLibre Chile</h1>
+    <p>Ranking por unidades vendidas de los 3 nichos candidatos del plan, actualizado todos los días a las 8am.</p>
+    <div id="updated" class="mono">Cargando…</div>
+  </header>
+  <div id="content"><div class="empty">Cargando datos…</div></div>
+  <footer>
+    Fuente: API pública de MercadoLibre (búsqueda por sitio MLC). Datos referenciales para investigación de nicho — el volumen de una búsqueda no garantiza margen; cruzar con la calculadora del plan.
+  </footer>
+</div>
+
+<script>
+(function(){
+  var NICHE_COLORS = ['#0F6E5C', '#B4661E', '#5B7FA6'];
+
+  function fmtInt(n){ return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+  function fmtCLP(n){ return "$" + fmtInt(n); }
+
+  function el(tag, cls, html){
+    var e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(html !== undefined) e.innerHTML = html;
+    return e;
+  }
+
+  function buildLineChart(niche, rows, color){
+    var w = 900, h = 160, padL = 44, padR = 12, padT = 14, padB = 22;
+    var dates = rows.map(function(r){return r.date;});
+    var vals = rows.map(function(r){return r.total;});
+    var maxV = Math.max.apply(null, vals.concat([1]));
+    var x = function(i){ return padL + (i/(Math.max(dates.length-1,1))) * (w-padL-padR); };
+    var y = function(v){ return h - padB - (v/maxV) * (h-padT-padB); };
+    var pathD = vals.map(function(v,i){ return (i===0?"M":"L") + x(i).toFixed(1) + "," + y(v).toFixed(1); }).join(" ");
+    var areaD = pathD + " L" + x(vals.length-1).toFixed(1) + "," + (h-padB) + " L" + x(0).toFixed(1) + "," + (h-padB) + " Z";
+
+    var svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+    svg.setAttribute("viewBox","0 0 "+w+" "+h);
+
+    function line(x1,y1,x2,y2,stroke,dash){
+      var l = document.createElementNS(svg.namespaceURI,"line");
+      l.setAttribute("x1",x1); l.setAttribute("y1",y1); l.setAttribute("x2",x2); l.setAttribute("y2",y2);
+      l.setAttribute("stroke",stroke); l.setAttribute("stroke-width","1");
+      if(dash) l.setAttribute("stroke-dasharray",dash);
+      svg.appendChild(l);
+    }
+    line(padL,h-padB,w-padR,h-padB,"var(--line-strong)");
+    [0,0.5,1].forEach(function(f){
+      var val = maxV*f;
+      var yy = y(val);
+      var t = document.createElementNS(svg.namespaceURI,"text");
+      t.setAttribute("x",padL-8); t.setAttribute("y",yy+4); t.setAttribute("text-anchor","end");
+      t.setAttribute("font-size","10"); t.setAttribute("font-family","IBM Plex Mono"); t.setAttribute("fill","var(--ink-dim)");
+      t.textContent = fmtInt(val);
+      svg.appendChild(t);
+      if(f>0) line(padL,yy,w-padR,yy,"var(--line)");
+    });
+
+    var area = document.createElementNS(svg.namespaceURI,"path");
+    area.setAttribute("d",areaD); area.setAttribute("fill",color); area.setAttribute("opacity","0.12"); area.setAttribute("stroke","none");
+    svg.appendChild(area);
+    var path = document.createElementNS(svg.namespaceURI,"path");
+    path.setAttribute("d",pathD); path.setAttribute("fill","none"); path.setAttribute("stroke",color); path.setAttribute("stroke-width","2");
+    svg.appendChild(path);
+
+    if(vals.length){
+      var lastX = x(vals.length-1), lastY = y(vals[vals.length-1]);
+      var dot = document.createElementNS(svg.namespaceURI,"circle");
+      dot.setAttribute("cx",lastX); dot.setAttribute("cy",lastY); dot.setAttribute("r","3.5"); dot.setAttribute("fill",color);
+      svg.appendChild(dot);
+    }
+    // first/last date labels
+    [0, dates.length-1].forEach(function(i){
+      if(i<0) return;
+      var t = document.createElementNS(svg.namespaceURI,"text");
+      t.setAttribute("x", x(i)); t.setAttribute("y", h-6);
+      t.setAttribute("text-anchor", i===0 ? "start" : "end");
+      t.setAttribute("font-size","10"); t.setAttribute("font-family","IBM Plex Mono"); t.setAttribute("fill","var(--ink-dim)");
+      t.textContent = dates[i];
+      svg.appendChild(t);
+    });
+    return svg;
+  }
+
+  function render(latest, history){
+    var content = document.getElementById("content");
+    content.innerHTML = "";
+    document.getElementById("updated").textContent = "Última actualización: " + new Date(latest.generated_at).toLocaleString('es-CL');
+
+    if(!latest.queries || !latest.queries.length){
+      content.appendChild(el("div","empty","Sin datos todavía — la primera corrida del agente completará esta página."));
+      return;
+    }
+
+    var niches = [];
+    latest.queries.forEach(function(q){ if(niches.indexOf(q.niche)===-1) niches.push(q.niche); });
+
+    niches.forEach(function(niche, ni){
+      var color = NICHE_COLORS[ni % NICHE_COLORS.length];
+      var section = el("section","niche-section");
+      var queriesInNiche = latest.queries.filter(function(q){return q.niche===niche;});
+      var totalSold = queriesInNiche.reduce(function(a,q){return a+q.total_sold_top10;},0);
+
+      var head = el("div","niche-head");
+      head.appendChild(el("h2",null,niche));
+      head.appendChild(el("span","trend-total", fmtInt(totalSold) + " unidades (top 10) esta corrida"));
+      section.appendChild(head);
+
+      // trend chart: sum of total_sold_top10 across queries of this niche, per date
+      var byDate = {};
+      history.filter(function(h){return h.niche===niche;}).forEach(function(h){
+        byDate[h.date] = (byDate[h.date]||0) + h.total_sold_top10;
+      });
+      var dates = Object.keys(byDate).sort();
+      if(dates.length >= 2){
+        var rows = dates.map(function(d){ return {date:d, total:byDate[d]}; });
+        var card = el("div","chart-card");
+        card.appendChild(buildLineChart(niche, rows, color));
+        section.appendChild(card);
+      }
+
+      queriesInNiche.forEach(function(q){
+        var qb = el("div","query-block");
+        qb.appendChild(el("h3",null,'"' + q.query + '"'));
+        qb.appendChild(el("div","query-meta",
+          '<span>' + fmtInt(q.listing_count) + ' publicaciones activas</span>' +
+          '<span>precio prom. ' + fmtCLP(q.avg_price) + '</span>'
+        ));
+        var maxSold = Math.max.apply(null, q.items.map(function(it){return it.sold_quantity||0;}).concat([1]));
+        var table = el("table");
+        table.innerHTML = '<thead><tr><th>Publicación</th><th class="num">Precio</th><th class="num">Vendidos</th><th></th></tr></thead>';
+        var tbody = el("tbody");
+        q.items.slice(0,8).forEach(function(it){
+          var tr = el("tr");
+          var titleTd = el("td",null,'<a class="title-link" href="'+it.permalink+'" target="_blank" rel="noopener">'+it.title+'</a>');
+          var priceTd = el("td","num", fmtCLP(it.price));
+          var soldTd = el("td","num", fmtInt(it.sold_quantity));
+          var barTd = el("td","bar-cell");
+          var track = el("div","bar-track");
+          var fill = el("div","bar-fill");
+          fill.style.width = (((it.sold_quantity||0)/maxSold)*100).toFixed(0) + "%";
+          fill.style.background = color;
+          track.appendChild(fill);
+          barTd.appendChild(track);
+          tr.appendChild(titleTd); tr.appendChild(priceTd); tr.appendChild(soldTd); tr.appendChild(barTd);
+          tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        qb.appendChild(table);
+        section.appendChild(qb);
+      });
+
+      content.appendChild(section);
+    });
+  }
+
+  Promise.all([
+    fetch('data/latest.json').then(function(r){ return r.ok ? r.json() : {queries:[]}; }).catch(function(){return {queries:[]};}),
+    fetch('data/history.json').then(function(r){ return r.ok ? r.json() : []; }).catch(function(){return [];})
+  ]).then(function(res){
+    render(res[0], res[1]);
+  });
+})();
+</script>
+</body>
+</html>
