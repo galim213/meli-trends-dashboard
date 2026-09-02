@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Km 0 Import — Tendencias Meli</title>
+<title>Km 0 Import — Radar de tendencias</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -60,13 +60,13 @@
 <div class="wrap">
   <header>
     <span class="stamp">Km 0 Import &middot; Radar diario</span>
-    <h1>Tendencias en MercadoLibre Chile</h1>
-    <p>Ranking por unidades vendidas de los 3 nichos candidatos del plan, actualizado todos los días a las 8am.</p>
+    <h1>Radar de tendencias por nicho</h1>
+    <p>Unidades vendidas y rating en AliExpress para los 3 nichos candidatos del plan, actualizado todos los días a las 8am. Es una señal de demanda global, no el ranking de MercadoLibre Chile.</p>
     <div id="updated" class="mono">Cargando…</div>
   </header>
   <div id="content"><div class="empty">Cargando datos…</div></div>
   <footer>
-    Fuente: API pública de MercadoLibre (búsqueda por sitio MLC). Datos referenciales para investigación de nicho — el volumen de una búsqueda no garantiza margen; cruzar con la calculadora del plan.
+    Fuente: AliExpress (búsqueda por término, extraída en cada corrida). Datos referenciales para investigación de nicho — ventas altas en AliExpress no garantizan margen ni demanda en Chile; cruzar con la calculadora del plan y con el precio de piso real en MercadoLibre.
   </footer>
 </div>
 
@@ -75,7 +75,6 @@
   var NICHE_COLORS = ['#0F6E5C', '#B4661E', '#5B7FA6'];
 
   function fmtInt(n){ return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
-  function fmtCLP(n){ return "$" + fmtInt(n); }
 
   function el(tag, cls, html){
     var e = document.createElement(tag);
@@ -182,27 +181,28 @@
       queriesInNiche.forEach(function(q){
         var qb = el("div","query-block");
         qb.appendChild(el("h3",null,'"' + q.query + '"'));
-        qb.appendChild(el("div","query-meta",
-          '<span>' + fmtInt(q.listing_count) + ' publicaciones activas</span>' +
-          '<span>precio prom. ' + fmtCLP(q.avg_price) + '</span>'
-        ));
-        var maxSold = Math.max.apply(null, q.items.map(function(it){return it.sold_quantity||0;}).concat([1]));
+        var failedNote = q.failed ? '<span style="color:var(--amber-ink);">no se pudo consultar hoy</span>' : ('<span>' + (q.items?q.items.length:0) + ' publicaciones relevadas</span>');
+        qb.appendChild(el("div","query-meta", failedNote));
+        if(!q.items || !q.items.length){ section.appendChild(qb); return; }
+        var maxSold = Math.max.apply(null, q.items.map(function(it){return it.sold_count||0;}).concat([1]));
         var table = el("table");
-        table.innerHTML = '<thead><tr><th>Publicación</th><th class="num">Precio</th><th class="num">Vendidos</th><th></th></tr></thead>';
+        table.innerHTML = '<thead><tr><th>Publicación</th><th class="num">Precio</th><th class="num">Rating</th><th class="num">Vendidos</th><th></th></tr></thead>';
         var tbody = el("tbody");
         q.items.slice(0,8).forEach(function(it){
           var tr = el("tr");
-          var titleTd = el("td",null,'<a class="title-link" href="'+it.permalink+'" target="_blank" rel="noopener">'+it.title+'</a>');
-          var priceTd = el("td","num", fmtCLP(it.price));
-          var soldTd = el("td","num", fmtInt(it.sold_quantity));
+          var titleHtml = it.permalink ? ('<a class="title-link" href="'+it.permalink+'" target="_blank" rel="noopener">'+it.title+'</a>') : it.title;
+          var titleTd = el("td",null,titleHtml);
+          var priceTd = el("td","num", it.price_display || "—");
+          var ratingTd = el("td","num", it.rating ? it.rating+"/5" : "—");
+          var soldTd = el("td","num", it.sold_count ? fmtInt(it.sold_count)+"+" : "—");
           var barTd = el("td","bar-cell");
           var track = el("div","bar-track");
           var fill = el("div","bar-fill");
-          fill.style.width = (((it.sold_quantity||0)/maxSold)*100).toFixed(0) + "%";
+          fill.style.width = (((it.sold_count||0)/maxSold)*100).toFixed(0) + "%";
           fill.style.background = color;
           track.appendChild(fill);
           barTd.appendChild(track);
-          tr.appendChild(titleTd); tr.appendChild(priceTd); tr.appendChild(soldTd); tr.appendChild(barTd);
+          tr.appendChild(titleTd); tr.appendChild(priceTd); tr.appendChild(ratingTd); tr.appendChild(soldTd); tr.appendChild(barTd);
           tbody.appendChild(tr);
         });
         table.appendChild(tbody);
